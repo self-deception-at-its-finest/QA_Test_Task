@@ -7,16 +7,7 @@ describe('Login functionality', () => {
     
         await LoginPage.open();
       
-        await LoginPage.inputUsername.setValue('standard_user');
-       
-        await expect(LoginPage.inputUsername).toHaveValue('standard_user');
-        
-        await LoginPage.inputPassword.setValue('secret_sauce');
-        
-        const typeAttr = await LoginPage.inputPassword.getAttribute('type');
-        await expect(typeAttr).toEqual('password');
-
-        await LoginPage.btnLogin.click();
+        await LoginPage.loginWithCredentials('standard_user', 'secret_sauce');
     
         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
 
@@ -30,16 +21,7 @@ describe('Login functionality', () => {
     
         await LoginPage.open();
       
-        await LoginPage.inputUsername.setValue('standard_user');
-       
-        await expect(LoginPage.inputUsername).toHaveValue('standard_user');
-        
-        await LoginPage.inputPassword.setValue('not_a_secret_sauce');
-        
-        const typeAttr = await LoginPage.inputPassword.getAttribute('type');
-        await expect(typeAttr).toEqual('password');
-
-        await LoginPage.btnLogin.click();
+        await LoginPage.loginWithCredentials('standard_user', 'not_a_secret_sauce');
     
         await expect(LoginPage.errorMessage).toBeDisplayed();
         await expect(LoginPage.errorMessage).toHaveText(
@@ -66,16 +48,7 @@ describe('Login functionality', () => {
     
         await LoginPage.open();
       
-        await LoginPage.inputUsername.setValue('not_a_standard_user');
-       
-        await expect(LoginPage.inputUsername).toHaveValue('not_a_standard_user');
-        
-        await LoginPage.inputPassword.setValue('secret_sauce');
-        
-        const typeAttr = await LoginPage.inputPassword.getAttribute('type');
-        await expect(typeAttr).toEqual('password');
-
-        await LoginPage.btnLogin.click();
+        await LoginPage.loginWithCredentials('not_a_standard_user', 'secret_sauce');
     
         await expect(LoginPage.errorMessage).toBeDisplayed();
         await expect(LoginPage.errorMessage).toHaveText(
@@ -96,4 +69,6 @@ describe('Login functionality', () => {
         await expect(LoginPage.usernameErrorIcon).toBeDisplayed();
         await expect(LoginPage.passwordErrorIcon).toBeDisplayed();
     });
+
+    
 });

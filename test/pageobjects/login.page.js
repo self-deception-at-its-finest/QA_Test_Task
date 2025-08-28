@@ -9,6 +9,15 @@ class LoginPage {
     async open() {
         await browser.url('https://www.saucedemo.com/');
     }
+    
+   async loginWithCredentials(username, password) {
+        await this.inputUsername.setValue(username);
+        await expect(this.inputUsername).toHaveValue(username);
+        await this.inputPassword.setValue(password);
+        const typeAttr = await this.inputPassword.getAttribute('type');
+        await expect(typeAttr).toEqual('password');
+        await this.btnLogin.click();
+    }
 }
 
 module.exports = new LoginPage();
