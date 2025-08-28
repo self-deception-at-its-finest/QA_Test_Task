@@ -1,5 +1,6 @@
 import LoginPage from '../pageobjects/login.page.js';
 import InventoryPage from '../pageobjects/inventory.page.js';
+import inventoryPage from '../pageobjects/inventory.page.js';
 
 
 describe('Login functionality', () => {
@@ -70,5 +71,22 @@ describe('Login functionality', () => {
         await expect(LoginPage.passwordErrorIcon).toBeDisplayed();
     });
 
+    it('Logout', async () => {
     
+        await LoginPage.open();
+      
+        await LoginPage.loginWithCredentials('standard_user', 'secret_sauce');
+        
+        await inventoryPage.btnBurger.click();
+        await expect(inventoryPage.menuList).toBeDisplayed();
+
+        const items = await inventoryPage.menuItems;
+        await expect(items).toBeElementsArrayOfSize(4);
+
+        await inventoryPage.logoutSidebarBtn.click();
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/');
+        await expect(LoginPage.inputUsername).toHaveValue('');
+        await expect(LoginPage.inputPassword).toHaveValue('');
+        
+    });
 });
