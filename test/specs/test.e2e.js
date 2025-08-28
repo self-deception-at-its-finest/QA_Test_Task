@@ -60,4 +60,40 @@ describe('Login functionality', () => {
         await expect(LoginPage.usernameErrorIcon).toBeDisplayed();
         await expect(LoginPage.passwordErrorIcon).toBeDisplayed();
     });
+
+
+    it('Login with invalid Login', async () => {
+    
+        await LoginPage.open();
+      
+        await LoginPage.inputUsername.setValue('not_a_standard_user');
+       
+        await expect(LoginPage.inputUsername).toHaveValue('not_a_standard_user');
+        
+        await LoginPage.inputPassword.setValue('secret_sauce');
+        
+        const typeAttr = await LoginPage.inputPassword.getAttribute('type');
+        await expect(typeAttr).toEqual('password');
+
+        await LoginPage.btnLogin.click();
+    
+        await expect(LoginPage.errorMessage).toBeDisplayed();
+        await expect(LoginPage.errorMessage).toHaveText(
+            'Epic sadface: Username and password do not match any user in this service');
+
+        const usernameClass = await LoginPage.inputUsername.getAttribute('class');
+        await expect(usernameClass).toContain('input_error form_input error');
+
+        const passwordClass = await LoginPage.inputPassword.getAttribute('class');
+        await expect(passwordClass).toContain('input_error form_input error')
+
+        const usernameBorderColor = await LoginPage.inputUsername.getCSSProperty('border-bottom-color');
+        await expect(usernameBorderColor.parsed.hex).toBe('#e2231a');
+
+        const passwordBorderColor = await LoginPage.inputPassword.getCSSProperty('border-bottom-color');
+        await expect(passwordBorderColor.parsed.hex).toBe('#e2231a');
+
+        await expect(LoginPage.usernameErrorIcon).toBeDisplayed();
+        await expect(LoginPage.passwordErrorIcon).toBeDisplayed();
+    });
 });
