@@ -8,3 +8,4 @@ class CartPage {
         await expect(items).toBeElementsArrayOfSize(expectedCount);
     }
 }
+module.exports = new CartPage();

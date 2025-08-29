@@ -2,6 +2,7 @@ import LoginPage from '../pageobjects/login.page.js';
 import InventoryPage from '../pageobjects/inventory.page.js';
 import CartPage from '../pageobjects/cart.page.js';
 import FooterComponent from '../pageobjects/footer.component.js';
+import inventoryPage from '../pageobjects/inventory.page.js';
 
 
 describe('Login functionality', () => {
@@ -88,6 +89,7 @@ describe('Login functionality', () => {
     }); 
 });
 
+
 describe('Cart functionality', () => {    
     it('Saving the cart after logout', async () => {    //Test case №5
     
@@ -116,20 +118,66 @@ describe('Cart functionality', () => {
        // const namesTexts = await Promise.all(
        //     itemNames.map(async item => await item.getText())
        // );
-       // await expect(namesTexts).toContain(addedProduct.name); ////?????
+       // await expect(namesTexts).toContain(addedProduct.name); ////????? да как сделать то бля
        
     });
 });
 
-describe('Products', () => {
-    it('Sorting products', async () => {        //Test case №6
+
+describe('Products', () => {   //Test case №6
+
+    beforeEach(async () => {
+
+        await InventoryPage.open();
+    });
+
+    it('Sorting products by Price (low to high)', async () => {        
     
+        await InventoryPage.sortDropdown.click();
+        await inventoryPage.sortDropdown.selectByAttribute('value', 'lohi');
+
+        const prices = await InventoryPage.getAllItemPrices();
+        const sortedPrices = [...prices].sort((a, b) => a - b);
         
-            
-       
+        await expect(prices).toEqual(sortedPrices);           
     });
 
+
+    it('Sorting productsy Price (high to low)', async () => {      
+
+        await InventoryPage.sortDropdown.click();
+        await inventoryPage.sortDropdown.selectByAttribute('value', 'hilo');
+
+        const prices = await InventoryPage.getAllItemPrices();
+        const sortedPrices = [...prices].sort((a, b) => b- a);
+        
+        await expect(prices).toEqual(sortedPrices); 
+
+    });
+
+    it('Sorting products by Name (A to Z)', async () => {    
+
+        await InventoryPage.sortDropdown.click();
+        await inventoryPage.sortDropdown.selectByAttribute('value', 'az');
+        
+        const names = await InventoryPage.getAllItemNames();
+        const sortedNames = [...names].sort();
+        
+        await expect(names).toEqual(sortedNames);
+    });
+    
+    it('Sorting products by Name (Z to A) ', async () => {       
+
+        await InventoryPage.sortDropdown.click();
+        await inventoryPage.sortDropdown.selectByAttribute('value', 'za');
+        
+        const names = await InventoryPage.getAllItemNames();
+        const sortedNames = [...names].sort().reverse();
+        
+        await expect(names).toEqual(sortedNames);
+    });
 });
+
 
 describe('Footer', () => {
     it('Footer Links', async () => {        //Test case №7
@@ -145,7 +193,7 @@ describe('Footer', () => {
 });
 
 describe('Checkout', () => {
-    it('Valid checkout', async () => {        //Test case №8
+    it('Valid checkout', async () => {        //Test case 
 
     });
 
