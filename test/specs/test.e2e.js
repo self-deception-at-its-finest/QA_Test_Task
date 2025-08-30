@@ -3,6 +3,7 @@ import InventoryPage from '../pageobjects/inventory.page.js';
 import CartPage from '../pageobjects/cart.page.js';
 import FooterComponent from '../pageobjects/footer.component.js';
 import inventoryPage from '../pageobjects/inventory.page.js';
+import cartPage from '../pageobjects/cart.page.js';
 
 
 describe('Login functionality', () => {
@@ -144,7 +145,6 @@ describe('Products', () => {   //Test case №6
         await expect(prices).toEqual(sortedPrices);           
     });
 
-
     it('Sorting productsy Price (high to low)', async () => {      
 
         await InventoryPage.sortDropdown.click();
@@ -197,10 +197,37 @@ describe('Footer', () => {
 describe('Checkout', () => {
     it('Valid checkout', async () => {        //Test case №8
 
+        await InventoryPage.open();
+
+        await expect(InventoryPage.items).toBeDisplayed();
+        await expect(InventoryPage.cartIcon).toBeDisplayed();
+
+        await expect(InventoryPage.cartBadge).toBeDisplayed();
+        
+
+
+
     });
 
-    it('Checkout witht products', async () => {        //Test case №9
+    it('Checkout without products', async () => {        //Test case №9
 
+        await InventoryPage.open();
+
+        await expect(InventoryPage.items).toBeDisplayed();
+        await expect(InventoryPage.cartIcon).toBeDisplayed();
+
+        await InventoryPage.cartIcon.click();
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
+        
+        await cartPage.clearCart();
+
+        await cartPage.checkoutBtn.click();
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
+    
+        await cartPage.emptyCartMessage.isDisplayed();
+    
+        const messageText =  await this.emptyCartMessage.getText();
+        await expect(messageText).toContain('cart is empty');
     });
 
 });
