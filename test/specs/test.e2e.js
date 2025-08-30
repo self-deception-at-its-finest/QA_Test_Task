@@ -97,7 +97,7 @@ describe('Cart functionality', () => {
       
         await LoginPage.loginWithCredentials('standard_user', 'secret_sauce');
 
-        await InventoryPage.addRandomItemToCart();
+        const addedItem = await InventoryPage.addRandomItemToCart();
         await expect(InventoryPage.cartBadge).toBeDisplayed();
         await expect(InventoryPage.cartBadge).toHaveText('1');
 
@@ -114,11 +114,13 @@ describe('Cart functionality', () => {
         await InventoryPage.cartIcon.click();
         await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
 
-        //const itemNames = await CartPage.cartItemNames;
-       // const namesTexts = await Promise.all(
-       //     itemNames.map(async item => await item.getText())
-       // );
-       // await expect(namesTexts).toContain(addedProduct.name); ////????? да как сделать то бля
+        const itemNames = await CartPage.cartItemNames;
+        const namesTexts = [];
+        for (const item of itemNames) {
+            const text = await item.getText();
+            namesTexts.push(text);
+        }
+        await expect(namesTexts).toContain(addedItem.name); 
        
     });
 });
@@ -193,7 +195,7 @@ describe('Footer', () => {
 });
 
 describe('Checkout', () => {
-    it('Valid checkout', async () => {        //Test case 
+    it('Valid checkout', async () => {        //Test case №8
 
     });
 

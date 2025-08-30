@@ -8,7 +8,7 @@ class InventoryPage {
     get addToCartButtons() { return $$('.btn_inventory'); } 
     get itemNames() { return $$('.inventory_item_name'); }
     get itemPrices() { return $$('.inventory_item_price'); }
-    get itemDescriptions () { return $('.inventory_item_desc'); }
+    get itemDescriptions () { return $$('.inventory_item_desc'); }
     get cartBadge () { return $('[data-test="shopping-cart-badge"]'); }
     get sortDropdown() { return $('[data-test="product-sort-container"]'); }
      
