@@ -14,11 +14,11 @@ class InventoryPage {
      
     
     async logout() {
-      await this.btnBurger.click();
-      await expect(this.menuList).toBeDisplayed();
-      const items = await this.menuItems;
-      await expect(items).toBeElementsArrayOfSize(4);
-      await this.logoutSidebarBtn.click();
+        await this.btnBurger.click();
+        await expect(this.menuList).toBeDisplayed();
+        const items = await this.menuItems;
+        await expect(items).toBeElementsArrayOfSize(4);
+        await this.logoutSidebarBtn.click();
     }
 
     async open() {
@@ -32,18 +32,42 @@ class InventoryPage {
         const descriptions = await this.itemDescriptions;
 
         const randomIndex = Math.floor(Math.random() * buttons.length);
-        
+    
+        let initialCartCount = 0;
+        let isCartBadgeVisible = false;
+    
+        try {
+            isCartBadgeVisible = await this.cartBadge.isDisplayed();
+            if (isCartBadgeVisible) {
+                initialCartCount = parseInt(await this.cartBadge.getText());
+            }
+        } catch (error) {
+            console.log('Cart badge not found or not visible, starting from 0');
+            initialCartCount = 0;
+            isCartBadgeVisible = false;
+        }
+
         const addedProduct = {
             index: randomIndex,
             name: await names[randomIndex].getText(),
             price: await prices[randomIndex].getText(),
             description: await descriptions[randomIndex].getText(),
             id: await names[randomIndex].getAttribute('id'),
-            dataTest: await buttons[randomIndex].getAttribute('data-test')
+            dataTest: await buttons[randomIndex].getAttribute('data-test'),
+            expectedCartCount: initialCartCount + 1,
+            hadCartBadge: isCartBadgeVisible
         };
 
         await buttons[randomIndex].click();
         return addedProduct;
+    }
+
+    async isCartEmpty() {
+        try {
+            return !(await this.cartBadge.isDisplayed());
+        } catch (error) {
+            return true;
+        }
     }
 
     async getAllItemNames() {
@@ -56,7 +80,7 @@ class InventoryPage {
     }
     
     return namesTexts;
-}
+    }
 
      async getAllItemPrices() {
         const priceElements = await $$('.inventory_item_price');

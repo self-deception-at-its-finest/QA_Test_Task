@@ -2,8 +2,10 @@ import LoginPage from '../pageobjects/login.page.js';
 import InventoryPage from '../pageobjects/inventory.page.js';
 import CartPage from '../pageobjects/cart.page.js';
 import FooterComponent from '../pageobjects/footer.component.js';
-import inventoryPage from '../pageobjects/inventory.page.js';
 import cartPage from '../pageobjects/cart.page.js';
+import CheckoutStepOne from '../pageobjects/checkout.step.one.js';
+import CheckoutStepTwo from '../pageobjects/checkout.step.two.js';
+import CheckoutComplete from '../pageobjects/checkout.complete.js';
 
 
 describe('Login functionality', () => {
@@ -100,7 +102,7 @@ describe('Cart functionality', () => {
 
         const addedItem = await InventoryPage.addRandomItemToCart();
         await expect(InventoryPage.cartBadge).toBeDisplayed();
-        await expect(InventoryPage.cartBadge).toHaveText('1');
+        await expect(InventoryPage.cartBadge).toHaveText(addedItem.expectedCartCount.toString());
 
         await InventoryPage.logout();
 
@@ -110,7 +112,7 @@ describe('Cart functionality', () => {
         await expect(InventoryPage.cartIcon).toBeDisplayed();
 
         await expect(InventoryPage.cartBadge).toBeDisplayed();
-        await expect(InventoryPage.cartBadge).toHaveText('1');
+        await expect(InventoryPage.cartBadge).toHaveText(addedItem.expectedCartCount.toString());
 
         await InventoryPage.cartIcon.click();
         await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
@@ -137,7 +139,7 @@ describe('Products', () => {   //Test case №6
     it('Sorting products by Price (low to high)', async () => {        
     
         await InventoryPage.sortDropdown.click();
-        await inventoryPage.sortDropdown.selectByAttribute('value', 'lohi');
+        await InventoryPage.sortDropdown.selectByAttribute('value', 'lohi');
 
         const prices = await InventoryPage.getAllItemPrices();
         const sortedPrices = [...prices].sort((a, b) => a - b);
@@ -148,7 +150,7 @@ describe('Products', () => {   //Test case №6
     it('Sorting productsy Price (high to low)', async () => {      
 
         await InventoryPage.sortDropdown.click();
-        await inventoryPage.sortDropdown.selectByAttribute('value', 'hilo');
+        await InventoryPage.sortDropdown.selectByAttribute('value', 'hilo');
 
         const prices = await InventoryPage.getAllItemPrices();
         const sortedPrices = [...prices].sort((a, b) => b- a);
@@ -160,7 +162,7 @@ describe('Products', () => {   //Test case №6
     it('Sorting products by Name (A to Z)', async () => {    
 
         await InventoryPage.sortDropdown.click();
-        await inventoryPage.sortDropdown.selectByAttribute('value', 'az');
+        await InventoryPage.sortDropdown.selectByAttribute('value', 'az');
         
         const names = await InventoryPage.getAllItemNames();
         const sortedNames = [...names].sort();
@@ -171,7 +173,7 @@ describe('Products', () => {   //Test case №6
     it('Sorting products by Name (Z to A) ', async () => {       
 
         await InventoryPage.sortDropdown.click();
-        await inventoryPage.sortDropdown.selectByAttribute('value', 'za');
+        await InventoryPage.sortDropdown.selectByAttribute('value', 'za');
         
         const names = await InventoryPage.getAllItemNames();
         const sortedNames = [...names].sort().reverse();
@@ -204,8 +206,56 @@ describe('Checkout', () => {
 
         await expect(InventoryPage.cartBadge).toBeDisplayed();
         
+        await CartPage.clearCart();
+        await InventoryPage.open();
+        const addedItem = await InventoryPage.addRandomItemToCart();
+        await expect(InventoryPage.cartBadge).toBeDisplayed();
+        await expect(InventoryPage.cartBadge).toHaveText(addedItem.expectedCartCount.toString());
 
+        await InventoryPage.cartIcon.click();
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
 
+        const itemNames = await CartPage.cartItemNames;
+        const namesTexts = [];
+        for (const item of itemNames) {
+            const text = await item.getText();
+            namesTexts.push(text);
+        }
+        await expect(namesTexts).toContain(addedItem.name); 
+
+        await cartPage.checkoutBtn.click();
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/checkout-step-one.html')
+
+        await expect(CheckoutStepOne.checkoutInfoContainer).toBeDisplayed();
+
+        await CheckoutStepOne.fillCheckoutForm('secret_users_firsname',"secret_users_lastname", "60456");
+
+        await CheckoutStepOne.continueBtn.click();
+        await expect(browser).toHaveUrl("https://www.saucedemo.com/checkout-step-two.html");
+
+        const checkoutItems = await CheckoutStepTwo.getItemNames();
+        await expect(checkoutItems).toContain(addedItem.name);
+
+        const expectedPrice = parseFloat(addedItem.price.replace('$', ''));
+        const actualSubtotal = await CheckoutStepTwo.getSubtotal();
+        await expect(actualSubtotal).toBeCloseTo(expectedPrice, 2);
+
+        await CheckoutStepTwo.finishButton.click(); 
+        await expect(browser).toHaveUrl("https://www.saucedemo.com/checkout-complete.html");
+
+        await expect(CheckoutComplete.checkoutCompleteContainer).toBeDisplayed();
+        await expect(CheckoutComplete.completeHeader).toBeDisplayed();
+        await expect(CheckoutComplete.completeHeader).toHaveText("Thank you for your order!");
+        
+        await CheckoutComplete.backToProductsBtn.click();
+
+        await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
+
+        await expect(InventoryPage.items).toBeDisplayed();
+
+        await expect(InventoryPage.cartIcon).toBeDisplayed();
+
+        await expect(InventoryPage.isCartEmpty()).toBeTruthy();
 
     });
 
