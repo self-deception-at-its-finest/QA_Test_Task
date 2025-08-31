@@ -10,7 +10,7 @@ class LoginPage {
         await browser.url('https://www.saucedemo.com/');
     }
     
-   async loginWithCredentials(username, password) {
+   async loginWithCredentials(username, password) { // method for login with different credentials
         await this.inputUsername.setValue(username);
         await expect(this.inputUsername).toHaveValue(username);
         await this.inputPassword.setValue(password);

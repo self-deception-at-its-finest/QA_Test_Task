@@ -12,7 +12,7 @@ class CartPage {
         await expect(items).toBeElementsArrayOfSize(expectedCount);
     }
 
-    async clearCart() {
+    async clearCart() { // method for clearing cart
         const currentUrl = await browser.getUrl();
         if (!currentUrl.includes('/cart.html')) {
             await browser.url('https://www.saucedemo.com/cart.html');

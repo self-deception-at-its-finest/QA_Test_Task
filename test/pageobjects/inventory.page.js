@@ -25,41 +25,41 @@ class InventoryPage {
         await browser.url('https://www.saucedemo.com/inventory.html');
     }
 
-    async addRandomItemToCart() {
-        const buttons = await this.addToCartButtons;
+    async addRandomItemToCart() {                      // Method to add a random item to the shopping cart
+        const buttons = await this.addToCartButtons;  // get all add to cart buttons, product names, prices, and descriptions
         const names = await this.itemNames;
         const prices = await this.itemPrices;
         const descriptions = await this.itemDescriptions;
 
-        const randomIndex = Math.floor(Math.random() * buttons.length);
+        const randomIndex = Math.floor(Math.random() * buttons.length); // generating a random index within the range of available products
     
-        let initialCartCount = 0;
+        let initialCartCount = 0; // initializing variables to track cart state
         let isCartBadgeVisible = false;
     
-        try {
-            isCartBadgeVisible = await this.cartBadge.isDisplayed();
+        try { // try to get current cart count from the badge
+            isCartBadgeVisible = await this.cartBadge.isDisplayed(); // checking if cart badge is currently displayed
             if (isCartBadgeVisible) {
-                initialCartCount = parseInt(await this.cartBadge.getText());
+                initialCartCount = parseInt(await this.cartBadge.getText()); // parsing the current cart count from badge text
             }
         } catch (error) {
-            console.log('Cart badge not found or not visible, starting from 0');
+            console.log('Cart badge not found or not visible, starting from 0'); // starting from 0 when cart badge is not found or not visible
             initialCartCount = 0;
             isCartBadgeVisible = false;
         }
 
-        const addedProduct = {
-            index: randomIndex,
+        const addedProduct = {                        // creating product object with all relevant information
+            index: randomIndex,                       // randomly selected index
             name: await names[randomIndex].getText(),
             price: await prices[randomIndex].getText(),
             description: await descriptions[randomIndex].getText(),
             id: await names[randomIndex].getAttribute('id'),
             dataTest: await buttons[randomIndex].getAttribute('data-test'),
-            expectedCartCount: initialCartCount + 1,
+            expectedCartCount: initialCartCount + 1,    // expected cart count after adding
             hadCartBadge: isCartBadgeVisible
         };
 
-        await buttons[randomIndex].click();
-        return addedProduct;
+        await buttons[randomIndex].click(); // clicking the 'add to cart' button for the randomly selected product
+        return addedProduct;  // rturning the product information object for next verification
     }
 
     async isCartEmpty() {
@@ -70,7 +70,7 @@ class InventoryPage {
         }
     }
 
-    async getAllItemNames() {
+    async getAllItemNames() {     // method for getting all the item names, returns an 'namesTexts' array
         const names = await this.itemNames;
         const namesTexts = [];
     
@@ -82,7 +82,7 @@ class InventoryPage {
     return namesTexts;
     }
 
-     async getAllItemPrices() {
+     async getAllItemPrices() {      // method for getting all the item prices, returns an 'prices' aaray
         const priceElements = await $$('.inventory_item_price');
         const prices = [];
         
