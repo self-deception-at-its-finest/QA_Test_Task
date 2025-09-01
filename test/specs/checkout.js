@@ -1,34 +1,34 @@
-import InventoryPage from '../pageobjects/inventory.page.js';
-import CartPage from '../pageobjects/cart.page.js';
+import inventoryPage from '../pageobjects/inventory.page.js';
 import cartPage from '../pageobjects/cart.page.js';
-import CheckoutStepOne from '../pageobjects/checkout.step.one.js';
-import CheckoutStepTwo from '../pageobjects/checkout.step.two.js';
-import CheckoutComplete from '../pageobjects/checkout.complete.js';
-import LoginPage from '../pageobjects/login.page.js';
+import checkoutStepOne from '../pageobjects/checkout.step.one.js';
+import checkoutStepTwo from '../pageobjects/checkout.step.two.js';
+import checkoutComplete from '../pageobjects/checkout.complete.js';
+import loginPage from '../pageobjects/login.page.js';
 
 describe('Checkout', () => {
 
     beforeEach(async () => {
-        await LoginPage.open();
-        await LoginPage.login('standard_user', 'secret_sauce');
+        await loginPage.open();
+        await loginPage.login('standard_user', 'secret_sauce');
      });
 
     it('Valid checkout', async () => {        //Test case №8
 
-        await expect(InventoryPage.items).toBeDisplayed();  // cheking if inventory page elements are displayed
-        await expect(InventoryPage.cartIcon).toBeDisplayed();  // cheking if inventory page cart is displayed
+        await expect(inventoryPage.items).toBeDisplayed();  // cheking if inventory page elements are displayed
+        await expect(inventoryPage.cartIcon).toBeDisplayed();  // cheking if inventory page cart is displayed
         
-        await CartPage.clearCart(); // clearing cart from previous tests
-        await InventoryPage.open();
+        await cartPage.clearCart(); // clearing cart from previous tests
+        
+        await inventoryPage.open();
 
-        const addedItem = await InventoryPage.addRandomItemToCart();  // adding a random item and saving it information in 'addedItem'
-        await expect(InventoryPage.cartBadge).toBeDisplayed();   // cheking if cart badge with number of added to cart itesm is displayed
-        await expect(InventoryPage.cartBadge).toHaveText(addedItem.expectedCartCount.toString());   // checking if number on card badge is coorect and matches amount of addedItems
+        const addedItem = await inventoryPage.addRandomItemToCart();  // adding a random item and saving it information in 'addedItem'
+        await expect(inventoryPage.cartBadge).toBeDisplayed();   // cheking if cart badge with number of added to cart itesm is displayed
+        await expect(inventoryPage.cartBadge).toHaveText(addedItem.expectedCartCount.toString());   // checking if number on card badge is coorect and matches amount of addedItems
 
-        await InventoryPage.cartIcon.click();
+        await inventoryPage.cartIcon.click();
         await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
 
-        const itemNames = await CartPage.cartItemNames; // get all cart item name elements, returns an array of WebElement objects
+        const itemNames = await cartPage.cartItemNames; // get all cart item name elements, returns an array of WebElement objects
         const namesTexts = [];
         for (const item of itemNames) {
             const text = await item.getText();
@@ -39,45 +39,45 @@ describe('Checkout', () => {
         await cartPage.checkoutBtn.click(); // going to checkout
         await expect(browser).toHaveUrl('https://www.saucedemo.com/checkout-step-one.html')
 
-        await expect(CheckoutStepOne.checkoutInfoContainer).toBeDisplayed(); //checkin if the checkout form is displayed
+        await expect(checkoutStepOne.checkoutInfoContainer).toBeDisplayed(); //checkin if the checkout form is displayed
 
-        await CheckoutStepOne.fillCheckoutForm('secret_users_firsname',"secret_users_lastname", "60456"); // filling in the checkout form with valid data
+        await checkoutStepOne.fillCheckoutForm('secret_users_firsname',"secret_users_lastname", "60456"); // filling in the checkout form with valid data
 
-        await CheckoutStepOne.continueBtn.click(); // going to the final checkout step
+        await checkoutStepOne.continueBtn.click(); // going to the final checkout step
         await expect(browser).toHaveUrl("https://www.saucedemo.com/checkout-step-two.html");
 
-        const checkoutItems = await CheckoutStepTwo.getItemNames(); // get all the checkout items
+        const checkoutItems = await checkoutStepTwo.getItemNames(); // get all the checkout items
         await expect(checkoutItems).toContain(addedItem.name); // checking if the final checkout contains previously added item
 
         const expectedPrice = parseFloat(addedItem.price.replace('$', '')); // calculating expected price and verify it matches subtotal
-        const actualSubtotal = await CheckoutStepTwo.getSubtotal();
+        const actualSubtotal = await checkoutStepTwo.getSubtotal();
         await expect(actualSubtotal).toBeCloseTo(expectedPrice, 2);
 
-        await CheckoutStepTwo.finishButton.click(); // finisching the checkout
+        await checkoutStepTwo.finishButton.click(); // finisching the checkout
         await expect(browser).toHaveUrl("https://www.saucedemo.com/checkout-complete.html");
 
-        await expect(CheckoutComplete.checkoutCompleteContainer).toBeDisplayed(); // cheking if the complete message is displayed
-        await expect(CheckoutComplete.completeHeader).toBeDisplayed();
-        await expect(CheckoutComplete.completeHeader).toHaveText("Thank you for your order!");
+        await expect(checkoutComplete.checkoutCompleteContainer).toBeDisplayed(); // cheking if the complete message is displayed
+        await expect(checkoutComplete.completeHeader).toBeDisplayed();
+        await expect(checkoutComplete.completeHeader).toHaveText("Thank you for your order!");
         
-        await CheckoutComplete.backToProductsBtn.click(); // going back to items page
+        await checkoutComplete.backToProductsBtn.click(); // going back to items page
 
         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
 
-        await expect(InventoryPage.items).toBeDisplayed();
+        await expect(inventoryPage.items).toBeDisplayed();
 
-        await expect(InventoryPage.cartIcon).toBeDisplayed();
+        await expect(inventoryPage.cartIcon).toBeDisplayed();
 
-        await expect(InventoryPage.isCartEmpty()).toBeTruthy(); // checking if the cart is empty after checkout
+        await expect(inventoryPage.isCartEmpty()).toBeTruthy(); // checking if the cart is empty after checkout
 
     });
 
     it('Checkout without products', async () => {        //Test case №9
 
-        await expect(InventoryPage.items).toBeDisplayed();
-        await expect(InventoryPage.cartIcon).toBeDisplayed();
+        await expect(inventoryPage.items).toBeDisplayed();
+        await expect(inventoryPage.cartIcon).toBeDisplayed();
 
-        await InventoryPage.cartIcon.click(); // goig ot cart page
+        await inventoryPage.cartIcon.click(); // goig ot cart page
         await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
         
         await cartPage.clearCart(); // clearing the cart if its not empty

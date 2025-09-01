@@ -1,20 +1,20 @@
-import LoginPage from '../pageobjects/login.page.js';
-import InventoryPage from '../pageobjects/inventory.page.js';
+import loginPage from '../pageobjects/login.page.js';
+import inventoryPage from '../pageobjects/inventory.page.js';
 
 
 describe('Login functionality', () => {
     it('Logout', async () => {    //Test case №4
     
-        await LoginPage.open();
+        await loginPage.open();
       
-        await LoginPage.login('standard_user', 'secret_sauce');
+        await loginPage.login('standard_user', 'secret_sauce');
         
-        await InventoryPage.logout(); // logout with burger menu
+        await inventoryPage.logout(); // logout with burger menu
 
         await expect(browser).toHaveUrl('https://www.saucedemo.com/');
 
-        await expect(LoginPage.inputUsername).toHaveValue(''); //checking if username and password fields are empty after logout
-        await expect(LoginPage.inputPassword).toHaveValue('');
+        await expect(loginPage.inputUsername).toHaveValue(''); //checking if username and password fields are empty after logout
+        await expect(loginPage.inputPassword).toHaveValue('');
         
     }); 
 });
