@@ -13,9 +13,10 @@ class LoginPage {
    async login(username, password) { 
         await this.inputUsername.setValue(username);
         await expect(this.inputUsername).toHaveValue(username);
+
         await this.inputPassword.setValue(password);
-        const typeAttr = await this.inputPassword.getAttribute('type');
-        await expect(typeAttr).toEqual('password');
+        await expect(this.inputPassword).toHaveAttribute('type', 'password');
+
         await this.btnLogin.click();
     }
 }

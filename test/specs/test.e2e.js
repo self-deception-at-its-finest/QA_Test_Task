@@ -13,7 +13,7 @@ describe('Login functionality', () => {
     
         await LoginPage.open();
       
-        await LoginPage.login('standard_user', 'secret_sauce'); //Login with valid credentials
+        await LoginPage.login('standard_user', 'secret_sauce'); 
     
         await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
 
@@ -27,7 +27,7 @@ describe('Login functionality', () => {
     
         await LoginPage.open();
       
-        await LoginPage.login('standard_user', 'not_a_secret_sauce'); // Login with invalid password
+        await LoginPage.login('standard_user', 'not_a_secret_sauce'); 
     
         await expect(LoginPage.errorMessage).toBeDisplayed(); //checking if error message appears
         await expect(LoginPage.errorMessage).toHaveText(
@@ -54,7 +54,7 @@ describe('Login functionality', () => {
     
         await LoginPage.open();
       
-        await LoginPage.login('not_a_standard_user', 'secret_sauce'); // Login with invalid login (further steps are similar to previous test)
+        await LoginPage.login('not_a_standard_user', 'secret_sauce'); 
     
         await expect(LoginPage.errorMessage).toBeDisplayed(); 
         await expect(LoginPage.errorMessage).toHaveText(
@@ -80,7 +80,7 @@ describe('Login functionality', () => {
     
         await LoginPage.open();
       
-        await LoginPage.login('standard_user', 'secret_sauce'); //Login with valid credentials
+        await LoginPage.login('standard_user', 'secret_sauce');
         
         await InventoryPage.logout(); // logout with burger menu
 
@@ -98,7 +98,7 @@ describe('Cart functionality', () => {
     
         await LoginPage.open();
       
-        await LoginPage.login('standard_user', 'secret_sauce'); //Login with valid credentials
+        await LoginPage.login('standard_user', 'secret_sauce'); 
 
         const addedItem = await InventoryPage.addRandomItemToCart(); //adding a random item and saving it information in 'addedItem'
         await expect(InventoryPage.cartBadge).toBeDisplayed(); //cheking if cart badge with number of added to cart itesm is displayed
@@ -106,7 +106,7 @@ describe('Cart functionality', () => {
 
         await InventoryPage.logout(); // logout with burger menu
 
-        await LoginPage.login('standard_user', 'secret_sauce'); // another login with valid data
+        await LoginPage.login('standard_user', 'secret_sauce'); 
 
         await expect(InventoryPage.items).toBeDisplayed();
         await expect(InventoryPage.cartIcon).toBeDisplayed();

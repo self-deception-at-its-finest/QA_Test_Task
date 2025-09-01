@@ -16,16 +16,15 @@ class InventoryPage {
     async logout() {
         await this.btnBurger.click();
         await expect(this.menuList).toBeDisplayed();
-        const items = await this.menuItems;
-        await expect(items).toBeElementsArrayOfSize(4);
+        await expect(this.menuItems).toBeElementsArrayOfSize(4);
         await this.logoutSidebarBtn.click();
     }
 
     async open() {
-        await browser.url('https://www.saucedemo.com/inventory.html');
+        await browser.url('/inventory.html');
     }
 
-    async addRandomItemToCart() {                      // Method to add a random item to the shopping cart
+    async addRandomItemToCart() {                     
         const buttons = await this.addToCartButtons;  // get all add to cart buttons, product names, prices, and descriptions
         const names = await this.itemNames;
         const prices = await this.itemPrices;
@@ -36,7 +35,7 @@ class InventoryPage {
         let initialCartCount = 0; // initializing variables to track cart state
         let isCartBadgeVisible = false;
     
-        try { // try to get current cart count from the badge
+        try {  // try to get current cart count from the badge
             isCartBadgeVisible = await this.cartBadge.isDisplayed(); // checking if cart badge is currently displayed
             if (isCartBadgeVisible) {
                 initialCartCount = parseInt(await this.cartBadge.getText()); // parsing the current cart count from badge text
@@ -63,11 +62,7 @@ class InventoryPage {
     }
 
     async isCartEmpty() {
-        try {
-            return !(await this.cartBadge.isDisplayed());
-        } catch (error) {
-            return true;
-        }
+         return !(await this.cartBadge.isDisplayed());
     }
 
     async getAllItemNames() {     // method for getting all the item names, returns an 'namesTexts' array
