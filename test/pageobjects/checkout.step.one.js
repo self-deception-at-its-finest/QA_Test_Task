@@ -18,4 +18,4 @@ class CheckoutStepOne {
 
     }
 }
-module.exports = new CheckoutStepOne();
+export default new CheckoutStepOne();

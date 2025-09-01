@@ -28,4 +28,5 @@ class CartPage {
          } 
     }
 }
-module.exports = new CartPage();
+
+export default new CartPage();

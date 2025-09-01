@@ -97,4 +97,4 @@ class InventoryPage {
     }
 }
 
-module.exports = new InventoryPage();
+export default new InventoryPage();

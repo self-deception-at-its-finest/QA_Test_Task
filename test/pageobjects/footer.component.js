@@ -38,4 +38,4 @@ class FooterComponent {
 
 }
 
-module.exports = new FooterComponent();
+export default new FooterComponent();

@@ -39,4 +39,4 @@ class CheckoutStepTwo {
     }
 
 }
-module.exports = new CheckoutStepTwo();
+export default new CheckoutStepTwo();
