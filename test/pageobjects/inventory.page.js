@@ -62,7 +62,7 @@ class InventoryPage {
     }
 
     async isCartEmpty() {
-         return !(await this.cartBadge.isDisplayed());
+         return !(await this.cartBadge.isDisplayed())
     }
 
     async getAllItemNames() {     // method for getting all the item names, returns an 'namesTexts' array

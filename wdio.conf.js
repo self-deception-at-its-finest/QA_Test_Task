@@ -22,7 +22,7 @@ export const config = {
     //
     baseUrl: 'https://www.saucedemo.com',
     specs: [
-        './test/specs/**/*.js'
+        './test/specs/**/*.js',
     ],
     // Patterns to exclude.
     exclude: [
