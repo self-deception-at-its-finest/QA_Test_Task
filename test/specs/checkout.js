@@ -1,8 +1,8 @@
 import inventoryPage from '../pageobjects/inventory.page.js';
 import cartPage from '../pageobjects/cart.page.js';
-import checkoutStepOne from '../pageobjects/checkout.step.one.js';
-import checkoutStepTwo from '../pageobjects/checkout.step.two.js';
-import checkoutComplete from '../pageobjects/checkout.complete.js';
+import checkoutStepOne from '../pageobjects/checkoutStepOne.page.js';
+import checkoutStepTwo from '../pageobjects/checkoutStepTwo.page.js';
+import checkoutComplete from '../pageobjects/checkoutComplete.page.js';
 import loginPage from '../pageobjects/login.page.js';
 
 describe('Checkout', () => {
