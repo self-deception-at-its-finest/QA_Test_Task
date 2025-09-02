@@ -1,3 +1,6 @@
+import { URLS } from '../constants/urls.constants.js';
+
+
 class CartPage {
     get cartItems() { return $$('.cart_item'); }
     get cartItemNames() { return $$('[data-test="inventory-item-name"]'); }
@@ -14,8 +17,8 @@ class CartPage {
 
     async clearCart() { // method for clearing cart
         const currentUrl = await browser.getUrl();
-        if (!currentUrl.includes('/cart.html')) {
-            await browser.url('https://www.saucedemo.com/cart.html');
+        if (!currentUrl.includes(URLS.CART)) {
+            await browser.url(URLS.CART);
         }
 
         const removeBtns = await this.removeButtons;

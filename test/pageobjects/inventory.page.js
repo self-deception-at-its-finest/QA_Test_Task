@@ -1,3 +1,6 @@
+import { URLS } from '../constants/urls.constants.js';
+
+
 class InventoryPage {
     get items()  { return $('[data-test="inventory-list"]'); }
     get cartIcon()  { return $('[data-test="shopping-cart-link"]'); }
@@ -14,14 +17,22 @@ class InventoryPage {
      
     
     async logout() {
+        await expect(browser).toHaveUrl(expect.stringContaining(URLS.INVENTORY));
+        await expect(this.items).toBeDisplayed();
+        await expect(this.cartIcon).toBeDisplayed();
+
+        await this.btnBurger.waitForDisplayed({ timeout: 5000 });
         await this.btnBurger.click();
+
+        await this.menuList.waitForDisplayed({ timeout: 10000 });
         await expect(this.menuList).toBeDisplayed();
         await expect(this.menuItems).toBeElementsArrayOfSize(4);
+
         await this.logoutSidebarBtn.click();
     }
 
     async open() {
-        await browser.url('/inventory.html');
+        await browser.url(URLS.INVENTORY);
     }
 
     async addRandomItemToCart() {                     

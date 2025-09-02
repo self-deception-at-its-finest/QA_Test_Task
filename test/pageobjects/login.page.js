@@ -7,7 +7,12 @@ class LoginPage {
     get passwordErrorIcon() { return $('input#password ~ svg.error_icon'); }
 
     async open() {
-        await browser.url('https://www.saucedemo.com/');
+        await browser.url('/');
+        await this.waitForPageLoad();
+    }
+    
+    async waitForPageLoad() {
+        await $('#root').waitForExist({ timeout: 10000 });
     }
     
    async login(username, password) { 

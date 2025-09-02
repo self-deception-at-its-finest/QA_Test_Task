@@ -1,12 +1,12 @@
 import loginPage from '../pageobjects/login.page.js';
 import inventoryPage from '../pageobjects/inventory.page.js';
-
+import { CREDENTIALS } from '../constants/creds.constants.js';
 
 describe('Products', () => {   //Test case №6
 
     beforeEach(async () => {
         await loginPage.open();
-        await loginPage.login('standard_user', 'secret_sauce');
+        await loginPage.login(CREDENTIALS.VALID.STANDARD_USER.username, CREDENTIALS.VALID.STANDARD_USER.password);
     });
 
     it('Sorting products by Price (low to high)', async () => {        

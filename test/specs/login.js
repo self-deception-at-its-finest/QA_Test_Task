@@ -1,5 +1,7 @@
 import loginPage from '../pageobjects/login.page.js';
 import inventoryPage from '../pageobjects/inventory.page.js';
+import { CREDENTIALS } from '../constants/creds.constants.js';
+import { URLS } from '../constants/urls.constants.js';
 
 
 describe('Login functionality', () => {
@@ -7,9 +9,9 @@ describe('Login functionality', () => {
     
         await loginPage.open();
       
-        await loginPage.login('standard_user', 'secret_sauce'); 
+        await loginPage.login(CREDENTIALS.VALID.STANDARD_USER.username, CREDENTIALS.VALID.STANDARD_USER.password); 
     
-        await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
+        await expect(browser).toHaveUrl(expect.stringContaining(URLS.INVENTORY));
 
         await expect(inventoryPage.items).toBeDisplayed(); //cheking that items on inventory page are displayed
 
@@ -21,7 +23,7 @@ describe('Login functionality', () => {
     
         await loginPage.open();
       
-        await loginPage.login('standard_user', 'not_a_secret_sauce'); 
+        await loginPage.login(CREDENTIALS.VALID.STANDARD_USER.username, CREDENTIALS.INVALID.INVALID_USER.password); 
     
         await expect(loginPage.errorMessage).toBeDisplayed(); //checking if error message appears
         await expect(loginPage.errorMessage).toHaveText(
@@ -48,7 +50,7 @@ describe('Login functionality', () => {
     
         await loginPage.open();
       
-        await loginPage.login('not_a_standard_user', 'secret_sauce'); 
+        await loginPage.login(CREDENTIALS.INVALID.INVALID_USER.username, CREDENTIALS.VALID.STANDARD_USER.password); 
     
         await expect(loginPage.errorMessage).toBeDisplayed(); 
         await expect(loginPage.errorMessage).toHaveText(

@@ -4,12 +4,15 @@ import checkoutStepOne from '../pageobjects/checkoutStepOne.page.js';
 import checkoutStepTwo from '../pageobjects/checkoutStepTwo.page.js';
 import checkoutComplete from '../pageobjects/checkoutComplete.page.js';
 import loginPage from '../pageobjects/login.page.js';
+import { CREDENTIALS } from '../constants/creds.constants.js';
+import { URLS } from '../constants/urls.constants.js';
+import { CHECKOUT_DATA} from '../constants/checkout.constants.js';
 
 describe('Checkout', () => {
 
     beforeEach(async () => {
         await loginPage.open();
-        await loginPage.login('standard_user', 'secret_sauce');
+        await loginPage.login(CREDENTIALS.VALID.STANDARD_USER.username, CREDENTIALS.VALID.STANDARD_USER.password);
      });
 
     it('Valid checkout', async () => {        //Test case №8
@@ -26,7 +29,7 @@ describe('Checkout', () => {
         await expect(inventoryPage.cartBadge).toHaveText(addedItem.expectedCartCount.toString());   // checking if number on card badge is coorect and matches amount of addedItems
 
         await inventoryPage.cartIcon.click();
-        await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
+        await expect(browser).toHaveUrl(expect.stringContaining(URLS.CART));
 
         const itemNames = await cartPage.cartItemNames; // get all cart item name elements, returns an array of WebElement objects
         const namesTexts = [];
@@ -37,14 +40,14 @@ describe('Checkout', () => {
         await expect(namesTexts).toContain(addedItem.name); //cheking if cart page contains previuosly added item
 
         await cartPage.checkoutBtn.click(); // going to checkout
-        await expect(browser).toHaveUrl('https://www.saucedemo.com/checkout-step-one.html')
+        await expect(browser).toHaveUrl(expect.stringContaining(URLS.CHECKOUT_STEP_ONE))
 
         await expect(checkoutStepOne.checkoutInfoContainer).toBeDisplayed(); //checkin if the checkout form is displayed
 
-        await checkoutStepOne.fillCheckoutForm('secret_users_firsname',"secret_users_lastname", "60456"); // filling in the checkout form with valid data
+        await checkoutStepOne.fillCheckoutForm(CHECKOUT_DATA.VALID.RAYAN_GOSLING.firstName,CHECKOUT_DATA.VALID.RAYAN_GOSLING.lastName, CHECKOUT_DATA.VALID.RAYAN_GOSLING.zipCode ); // filling in the checkout form with valid data
 
         await checkoutStepOne.continueBtn.click(); // going to the final checkout step
-        await expect(browser).toHaveUrl("https://www.saucedemo.com/checkout-step-two.html");
+        await expect(browser).toHaveUrl(expect.stringContaining(URLS.CHECKOUT_STEP_TWO));
 
         const checkoutItems = await checkoutStepTwo.getItemNames(); // get all the checkout items
         await expect(checkoutItems).toContain(addedItem.name); // checking if the final checkout contains previously added item
@@ -54,7 +57,7 @@ describe('Checkout', () => {
         await expect(actualSubtotal).toBeCloseTo(expectedPrice, 2);
 
         await checkoutStepTwo.finishButton.click(); // finisching the checkout
-        await expect(browser).toHaveUrl("https://www.saucedemo.com/checkout-complete.html");
+        await expect(browser).toHaveUrl(expect.stringContaining(URLS.CHECKOUT_COMPLETE));
 
         await expect(checkoutComplete.checkoutCompleteContainer).toBeDisplayed(); // cheking if the complete message is displayed
         await expect(checkoutComplete.completeHeader).toBeDisplayed();
@@ -62,7 +65,7 @@ describe('Checkout', () => {
         
         await checkoutComplete.backToProductsBtn.click(); // going back to items page
 
-        await expect(browser).toHaveUrl('https://www.saucedemo.com/inventory.html');
+        await expect(browser).toHaveUrl(expect.stringContaining(URLS.INVENTORY));
 
         await expect(inventoryPage.items).toBeDisplayed();
 
@@ -78,12 +81,12 @@ describe('Checkout', () => {
         await expect(inventoryPage.cartIcon).toBeDisplayed();
 
         await inventoryPage.cartIcon.click(); // goig ot cart page
-        await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html');
+        await expect(browser).toHaveUrl(expect.stringContaining(URLS.CART));
         
         await cartPage.clearCart(); // clearing the cart if its not empty
 
         await cartPage.checkoutBtn.click(); // going to checkout
-        await expect(browser).toHaveUrl('https://www.saucedemo.com/cart.html'); //checking if the url is still cart page, and we are not redirected
+        await expect(browser).toHaveUrl(expect.stringContaining(URLS.CART)); //checking if the url is still cart page, and we are not redirected
     
         await cartPage.emptyCartMessage.isDisplayed(); //cheking if the error message  is displayed
     
